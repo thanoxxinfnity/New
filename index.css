@@ -1,0 +1,169 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --void-paper: #f7f3ec;
+  --void-card: #ffffff;
+  --void-ink: #1c1b1a;
+  --void-ink-soft: #6b6560;
+  --void-line: #201f1d;
+  --void-orange: #ff6a3d;
+  --void-orange-deep: #c8471f;
+}
+
+.dark {
+  --void-paper: #121214;
+  --void-card: #1a1a1e;
+  --void-ink: #f1eee8;
+  --void-ink-soft: #a39d95;
+  --void-line: #3a393f;
+  --void-orange: #ff7a45;
+  --void-orange-deep: #7a2c10;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  background-color: var(--void-paper);
+  color: var(--void-ink);
+  font-family: "Zen Kaku Gothic New", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  overscroll-behavior: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* Hand-drawn ink border: two offset outlines simulate a sketchy stroke */
+.ink-border {
+  border: 1.5px solid var(--void-line);
+  border-radius: 14px;
+  position: relative;
+}
+.ink-border::before {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border: 1px solid var(--void-line);
+  border-radius: 16px;
+  opacity: 0.18;
+  pointer-events: none;
+}
+
+/* Screentone hover overlay (manga halftone dots) */
+.screentone {
+  position: relative;
+  overflow: hidden;
+}
+.screentone::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(var(--void-ink) 0.6px, transparent 0.6px);
+  background-size: 6px 6px;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+.screentone:hover::after {
+  opacity: 0.06;
+}
+
+/* Ultra-thin single-line scrollbar */
+.void-scroll::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+.void-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.void-scroll::-webkit-scrollbar-thumb {
+  background: var(--void-orange);
+  border-radius: 4px;
+}
+.void-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--void-orange) transparent;
+}
+
+/* Minimalist reticle cursor for the canvas / interactive zones */
+.void-cursor {
+  cursor: crosshair;
+}
+
+/* Focus visibility kept intentionally sharp, not removed */
+:focus-visible {
+  outline: 2px solid var(--void-orange);
+  outline-offset: 2px;
+}
+
+/* Blockquote ink-bleed bar used inside markdown renderer */
+.void-quote {
+  border-left: 3px solid var(--void-orange);
+  padding-left: 0.75rem;
+  color: var(--void-ink-soft);
+  font-style: italic;
+}
+
+/* Light-sweep effect element used on hover */
+.sweep-wrap {
+  position: relative;
+  overflow: hidden;
+}
+.sweep-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 30%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.35),
+    transparent
+  );
+}
+
+/* Defined here as plain CSS (not only in tailwind.config) because the
+   ambient particles apply this animation via inline JS style, so it must
+   exist in the compiled CSS regardless of Tailwind's class-usage scan. */
+@keyframes floatpetal {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-110vh) rotate(220deg);
+    opacity: 0;
+  }
+}
+
+.animation-delay-1 {
+  animation-delay: 0.6s;
+}
+.animation-delay-2 {
+  animation-delay: 1.8s;
+}
+.animation-delay-3 {
+  animation-delay: 3s;
+}
