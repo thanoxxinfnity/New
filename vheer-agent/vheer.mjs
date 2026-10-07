@@ -13,6 +13,15 @@ export async function launch() {
   });
 }
 
+async function newCtx(browser) {
+  const ctx = await browser.newContext({ viewport: { width: 1280, height: 1400 } });
+  await ctx.route('**/*', (route) => {
+    const h = new URL(route.request().url()).hostname;
+    return h === 'vheer.com' || h.endsWith('.vheer.com') ? route.continue() : route.abort();
+  });
+  return ctx;
+}
+
 async function pickOption(page, buttonText, optionText) {
   await page.getByRole('button', { name: buttonText, exact: true }).first().click();
   await page.getByText(optionText, { exact: true }).last().click({ timeout: 8000 });
@@ -26,7 +35,7 @@ async function download(ctx, url, dest) {
 }
 
 export async function makeBaseImage(browser, prompt, dest, log = () => {}) {
-  const ctx = await browser.newContext({ viewport: { width: 1280, height: 1400 } });
+  const ctx = await newCtx(browser);
   const page = await ctx.newPage();
   try {
     await page.goto('https://vheer.com/app/text-to-image', { waitUntil: 'domcontentloaded', timeout: 60000 });
@@ -48,7 +57,7 @@ export async function makeBaseImage(browser, prompt, dest, log = () => {}) {
 }
 
 export async function makeVideo(browser, imagePath, prompt, dest, { duration = '5s', log = () => {} } = {}) {
-  const ctx = await browser.newContext({ viewport: { width: 1280, height: 1400 } });
+  const ctx = await newCtx(browser);
   const page = await ctx.newPage();
   try {
     await page.goto('https://vheer.com/app/image-to-video', { waitUntil: 'domcontentloaded', timeout: 60000 });
