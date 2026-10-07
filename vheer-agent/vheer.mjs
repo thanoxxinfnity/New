@@ -14,7 +14,8 @@ export async function launch() {
 }
 
 async function newCtx(browser) {
-  const ctx = await browser.newContext({ viewport: { width: 1280, height: 1400 } });
+  const state = fs.existsSync(process.env.AUTH_STATE || 'auth.json') ? (process.env.AUTH_STATE || 'auth.json') : undefined;
+  const ctx = await browser.newContext({ viewport: { width: 1280, height: 1400 }, storageState: state });
   await ctx.route('**/*', (route) => {
     const h = new URL(route.request().url()).hostname;
     return h === 'vheer.com' || h.endsWith('.vheer.com') ? route.continue() : route.abort();
