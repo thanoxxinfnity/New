@@ -4,3 +4,4 @@ out
 probe*.mjs
 debug*.mjs
 test*.mjs
+*_probe.mjs
