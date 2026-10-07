@@ -1,7 +1,7 @@
-import shutil,sys,time
+import os,shutil,sys,time
 from gradio_client import Client, handle_file
 t=time.time()
-c=Client("Lightricks/ltx-video-distilled", verbose=False)
+c=Client("Lightricks/ltx-video-distilled", token=os.environ.get("HF_TOKEN"), verbose=False)
 res=c.predict(
   prompt="The character walks toward the camera, hand-drawn 2D anime style, smooth fluid animation, static camera, no text",
   negative_prompt="worst quality, inconsistent motion, blurry, jittery, distorted, text, watermark",
