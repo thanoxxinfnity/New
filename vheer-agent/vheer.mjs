@@ -54,23 +54,13 @@ export async function makeVideo(browser, imagePath, prompt, dest, { duration = '
     await page.goto('https://vheer.com/app/image-to-video', { waitUntil: 'domcontentloaded', timeout: 60000 });
     await page.locator('textarea').first().waitFor({ timeout: 30000 });
     await page.waitForTimeout(3000);
-    let uploaded = false;
-    for (let a = 1; a <= 3 && !uploaded; a++) {
-      try {
-        const up = page.waitForResponse((r) => /\/api\/vheer\/upload/.test(r.url()), { timeout: 60000 });
-        const [fc] = await Promise.all([
-          page.waitForEvent('filechooser', { timeout: 10000 }),
-          page.getByRole('button', { name: 'Select Images' }).click(),
-        ]);
-        await fc.setFiles(imagePath);
-        await up;
-        uploaded = true;
-      } catch (e) {
-        log(`upload attempt ${a} failed: ${e.message.split('\n')[0]}`);
-        await page.waitForTimeout(2000);
-      }
-    }
-    if (!uploaded) throw new Error('image upload failed');
+    const [fc] = await Promise.all([
+      page.waitForEvent('filechooser', { timeout: 20000 }),
+      page.getByRole('button', { name: 'Select Images' }).click(),
+    ]);
+    await fc.setFiles(imagePath);
+    await page.getByRole('button', { name: 'Select Images' }).waitFor({ state: 'detached', timeout: 60000 }).catch(() => {});
+    log('image attached');
     await page.waitForTimeout(1500);
     await page.locator('textarea').first().fill(prompt);
     if (duration !== '5s') await pickOption(page, '5s', duration).catch(() => {});
