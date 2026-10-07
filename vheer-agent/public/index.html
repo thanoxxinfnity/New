@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vheer Agent</title>
+<style>
+  :root { --bg:#faf9f6; --card:#fff; --ink:#1b1b1b; --mute:#6b6b6b; --line:#e4e1da; --acc:#1f6f43; --bad:#b3261e; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#141414; --card:#1e1e1e; --ink:#eee; --mute:#9a9a9a; --line:#333; --acc:#4cc38a; --bad:#ff8a80; } }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.45 system-ui,sans-serif; padding:16px; max-width:720px; margin-inline:auto; }
+  h1 { font-size:20px; margin:4px 0 12px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px; margin-bottom:12px; }
+  h2 { font-size:14px; margin:0 0 8px; text-transform:uppercase; letter-spacing:.04em; color:var(--mute); }
+  label { display:block; font-size:13px; color:var(--mute); margin:8px 0 4px; }
+  input, textarea, select { width:100%; padding:10px; border:1px solid var(--line); border-radius:8px; background:var(--bg); color:var(--ink); font:inherit; }
+  textarea { min-height:90px; }
+  button { padding:12px 16px; border:0; border-radius:10px; background:var(--acc); color:#fff; font:inherit; font-weight:600; width:100%; margin-top:10px; }
+  button.sec { background:transparent; color:var(--ink); border:1px solid var(--line); }
+  button:disabled { opacity:.5; }
+  .cat { margin:10px 0 2px; font-weight:600; }
+  .m { display:flex; gap:8px; align-items:flex-start; padding:4px 0; font-size:14px; }
+  .m input { width:auto; margin-top:3px; }
+  .row { display:flex; gap:8px; } .row > * { flex:1; }
+  .item { display:flex; justify-content:space-between; gap:8px; padding:6px 0; border-bottom:1px solid var(--line); font-size:13px; word-break:break-all; }
+  .done { color:var(--acc); } .failed { color:var(--bad); } .generating,.retry { color:var(--mute); }
+  pre { white-space:pre-wrap; font-size:12px; color:var(--mute); max-height:160px; overflow:auto; margin:8px 0 0; }
+  .bar { height:8px; background:var(--line); border-radius:4px; overflow:hidden; margin:8px 0; } .bar i { display:block; height:100%; background:var(--acc); width:0; transition:width .4s; }
+  small { color:var(--mute); }
+</style>
+</head>
+<body>
+<h1>Vheer Agent</h1>
+
+<div class="card">
+  <h2>Settings</h2>
+  <label>NVIDIA API key (optional, base image banane ke liye FLUX. Khali chhodo toh vheer text-to-image use hoga)</label>
+  <input id="key" type="password" placeholder="nvapi-..." autocomplete="off">
+  <label>Duration</label>
+  <select id="dur"><option>5s</option><option>8s</option><option>10s</option></select>
+  <small>Key sirf tumhare browser (localStorage) mein rehti hai aur job ke saath server ko bheji jaati hai, save nahi hoti.</small>
+</div>
+
+<div class="card">
+  <h2>Characters</h2>
+  <label>Character A prompt</label>
+  <textarea id="cA">Hand-drawn 2D anime style, a teenage boy in a green jacket standing on a quiet city street, soft daylight, clean linework</textarea>
+  <label>Character B prompt</label>
+  <textarea id="cB">Hand-drawn 2D anime style, a schoolgirl with long black hair in a school uniform, residential street, cherry blossoms, clean linework</textarea>
+  <div class="row"><label style="margin:8px 0 0"><input type="checkbox" id="useA" checked style="width:auto"> A banao</label><label style="margin:8px 0 0"><input type="checkbox" id="useB" style="width:auto"> B banao</label></div>
+  <label>Ya apni 16:9 image upload karo (A ki jagah use hogi)</label>
+  <input id="up" type="file" accept="image/*">
+</div>
+
+<div class="card">
+  <h2>Motions</h2>
+  <div id="motions"></div>
+  <div class="row"><button class="sec" id="all">Sab select</button><button class="sec" id="none">Sab hatao</button></div>
+  <label>Apne custom motions (ek line mein ek, format: category | naam | prompt)</label>
+  <textarea id="custom" placeholder="locomotion | skip | The character skips happily"></textarea>
+</div>
+
+<button id="go">Start generating</button>
+
+<div class="card" id="prog" hidden>
+  <h2 id="ptitle">Progress</h2>
+  <div class="bar"><i id="pbar"></i></div>
+  <div id="items"></div>
+  <pre id="log"></pre>
+  <button id="zip" hidden>Download ZIP</button>
+  <button class="sec" id="lst" hidden>Videos ki list (size, resolution, duration)</button>
+</div>
+
+<script>
+const MOTIONS = {
+  locomotion: [["walk_forward","The character walks forward steadily toward the camera"],["run_fast","The character runs fast down the street, arms swinging"],["jog_slow","The character jogs slowly, breathing heavily"],["look_back","The character stops suddenly and looks back over their shoulder"],["jump_land","The character jumps up and lands lightly on both feet"],["walk_away","The character turns around and walks away from the camera"],["climb_stairs","The character climbs a few stairs, one step at a time"],["stumble","The character stumbles, then catches their balance"]],
+  gestures: [["wave","The character waves a hand happily at the camera"],["point","The character points forward with one arm, determined"],["cross_arms","The character crosses their arms and nods"],["fist","The character raises a clenched fist in front of their face"],["reach","The character reaches an open hand toward the camera"],["shrug","The character shrugs both shoulders"],["adjust_hair","The character adjusts their hair with one hand"],["bow","The character bows politely"]],
+  expressions: [["smile","Close-up face. The character smiles slowly, eyes brightening"],["shocked","Close-up face. The character's eyes widen in shock, mouth slightly open"],["angry","Close-up face. The character frowns, eyebrows lowering in anger"],["sad","Close-up face. The character blinks slowly and looks sad, eyes glistening"],["smirk","Close-up face. The character smirks confidently"],["laugh","Close-up face. The character laughs, shoulders shaking"],["look_away","Close-up face. The character looks to the left, then slowly back at the camera"],["calm_exhale","Close-up face. The character closes their eyes and exhales calmly"]],
+  secondary_motion: [["strong_wind","Strong wind blows the character's hair and jacket to one side"],["gentle_breeze","Gentle breeze moves the hair while the character stands still"],["skirt_flutter","The character's skirt and ribbon flutter as they run"],["petals","Cherry blossom petals drift past the character in the wind"],["scarf_wave","The character's scarf waves in the wind, a slight hair sway"],["quick_turn","The character turns quickly, hair and clothes swinging after the motion"]],
+};
+const $ = (id) => document.getElementById(id);
+const box = $('motions'); let n = 0;
+for (const [cat, list] of Object.entries(MOTIONS)) {
+  box.insertAdjacentHTML('beforeend', `<div class="cat">${cat}</div>`);
+  for (const [name, prompt] of list) {
+    n++;
+    box.insertAdjacentHTML('beforeend', `<label class="m"><input type="checkbox" data-cat="${cat}" data-n="${n}" data-name="${name}" data-prompt="${prompt.replace(/"/g,'&quot;')}"><span>${name.replace(/_/g,' ')}<br><small>${prompt}</small></span></label>`);
+  }
+}
+const cbs = () => [...box.querySelectorAll('input')];
+cbs().slice(0, 2).forEach((c) => (c.checked = true));
+$('all').onclick = () => cbs().forEach((c) => (c.checked = true));
+$('none').onclick = () => cbs().forEach((c) => (c.checked = false));
+try { $('key').value = localStorage.getItem('nvkey') || ''; } catch {}
+$('key').onchange = () => { try { localStorage.setItem('nvkey', $('key').value); } catch {} };
+
+const b64 = (f) => new Promise((ok) => { const r = new FileReader(); r.onload = () => ok(r.result.split(',')[1]); r.readAsDataURL(f); });
+let jobId = null, timer = null;
+
+$('go').onclick = async () => {
+  const motions = cbs().filter((c) => c.checked).map((c) => ({ category: c.dataset.cat, n: +c.dataset.n, name: c.dataset.name, prompt: c.dataset.prompt }));
+  let k = 100;
+  for (const line of $('custom').value.split('\n').map((s) => s.trim()).filter(Boolean)) {
+    const [category, name, prompt] = line.split('|').map((s) => s.trim());
+    if (category && name && prompt) motions.push({ category, name, prompt, n: ++k - 100 });
+  }
+  const characters = [];
+  const file = $('up').files[0];
+  if (file) characters.push({ id: 'upload', prompt: '', imageB64: await b64(file) });
+  else {
+    if ($('useA').checked) characters.push({ id: 'A', prompt: $('cA').value });
+    if ($('useB').checked) characters.push({ id: 'B', prompt: $('cB').value });
+  }
+  if (!motions.length || !characters.length) return alert('Kam se kam ek character aur ek motion chuno');
+  $('go').disabled = true;
+  const r = await fetch('/api/jobs', { method: 'POST', body: JSON.stringify({ characters, motions, duration: $('dur').value, nvidiaKey: $('key').value.trim() }) });
+  const j = await r.json();
+  if (!r.ok) { $('go').disabled = false; return alert(j.error); }
+  jobId = j.id; $('prog').hidden = false; $('zip').hidden = $('lst').hidden = true;
+  clearInterval(timer); timer = setInterval(poll, 4000); poll();
+};
+
+async function poll() {
+  const j = await (await fetch('/api/jobs/' + jobId)).json();
+  const done = j.items.filter((i) => i.status === 'done').length;
+  const fin = j.items.filter((i) => i.status === 'done' || i.status === 'failed').length;
+  $('ptitle').textContent = `${j.status}: ${done} done / ${j.total}`;
+  $('pbar').style.width = (100 * fin / j.total) + '%';
+  $('items').innerHTML = j.items.map((i) => `<div class="item"><span>${i.name}</span><span class="${i.status}">${i.status}${i.status === 'done' ? ` ${(i.size/1048576).toFixed(1)}MB ${i.width}x${i.height}` : i.error ? ' ' + i.error : ''}</span></div>`).join('');
+  $('log').textContent = j.log.join('\n');
+  if (done) $('zip').hidden = $('lst').hidden = false;
+  if (j.status === 'finished' || j.status === 'error') { clearInterval(timer); $('go').disabled = false; }
+}
+$('zip').onclick = () => (location.href = `/api/jobs/${jobId}/zip`);
+$('lst').onclick = () => window.open(`/api/jobs/${jobId}/list`);
+</script>
+</body>
+</html>

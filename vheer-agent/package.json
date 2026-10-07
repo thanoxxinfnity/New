@@ -1,0 +1,17 @@
+{
+  "name": "vheer-agent",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "archiver": "^8.0.0",
+    "playwright": "^1.63.0"
+  },
+  "type": "module"
+}
