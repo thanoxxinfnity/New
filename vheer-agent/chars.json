@@ -1,0 +1,122 @@
+[
+ {
+  "id": "loc01",
+  "prompt": "Hand-drawn 2D anime style, a teenage boy in a green jacket on a quiet city street, clean linework, soft daylight, wide 16:9 composition"
+ },
+ {
+  "id": "loc02",
+  "prompt": "Hand-drawn 2D anime style, a tall athletic girl with a ponytail in a red tracksuit on a riverside road, clean linework, soft daylight, wide 16:9 composition"
+ },
+ {
+  "id": "loc03",
+  "prompt": "Hand-drawn 2D anime style, a young man with short silver hair in a grey hoodie on a park path, clean linework, soft daylight, wide 16:9 composition"
+ },
+ {
+  "id": "loc04",
+  "prompt": "Hand-drawn 2D anime style, a schoolgirl with long black hair in a school uniform on a residential street, clean linework, soft daylight, wide 16:9 composition"
+ },
+ {
+  "id": "loc05",
+  "prompt": "Hand-drawn 2D anime style, a muscular boy with spiky orange hair in a blue sports jersey on a basketball court, clean linework, soft daylight, wide 16:9 composition"
+ },
+ {
+  "id": "loc06",
+  "prompt": "Hand-drawn 2D anime style, an elderly man with a white beard and a brown coat on a village road, clean linework, soft daylight, wide 16:9 composition"
+ },
+ {
+  "id": "loc07",
+  "prompt": "Hand-drawn 2D anime style, a girl with twin tails in a yellow raincoat standing at the bottom of a stone staircase, clean linework, soft daylight, wide 16:9 composition"
+ },
+ {
+  "id": "loc08",
+  "prompt": "Hand-drawn 2D anime style, a boy with glasses and a backpack on a school hallway, clean linework, soft daylight, wide 16:9 composition"
+ },
+ {
+  "id": "ges09",
+  "prompt": "Hand-drawn 2D anime style, a cheerful girl with short pink hair in a denim jacket waving on a sunny street, clean linework, soft daylight, wide 16:9 composition"
+ },
+ {
+  "id": "ges10",
+  "prompt": "Hand-drawn 2D anime style, a young woman with a long blue braid in a white coat standing on a rooftop, clean linework, soft daylight, wide 16:9 composition"
+ },
+ {
+  "id": "ges11",
+  "prompt": "Hand-drawn 2D anime style, a stern man in a black suit with slicked-back hair in an office lobby, clean linework, soft daylight, wide 16:9 composition"
+ },
+ {
+  "id": "ges12",
+  "prompt": "Hand-drawn 2D anime style, a boy with messy brown hair in a martial arts gi in a dojo yard, clean linework, soft daylight, wide 16:9 composition"
+ },
+ {
+  "id": "ges13",
+  "prompt": "Hand-drawn 2D anime style, a shy girl with curly auburn hair in a cream sweater by a library window, clean linework, soft daylight, wide 16:9 composition"
+ },
+ {
+  "id": "ges14",
+  "prompt": "Hand-drawn 2D anime style, a laid-back guy with a beanie and a plaid shirt on a cafe terrace, clean linework, soft daylight, wide 16:9 composition"
+ },
+ {
+  "id": "ges15",
+  "prompt": "Hand-drawn 2D anime style, a fashionable girl with long platinum hair in a lavender dress on a boutique street, clean linework, soft daylight, wide 16:9 composition"
+ },
+ {
+  "id": "ges16",
+  "prompt": "Hand-drawn 2D anime style, a young man in a formal navy school uniform in front of a temple gate, clean linework, soft daylight, wide 16:9 composition"
+ },
+ {
+  "id": "exp17",
+  "prompt": "Hand-drawn 2D anime style, close-up portrait face of a smiling girl with green eyes and short brown hair, clean linework, soft daylight, wide 16:9 composition"
+ },
+ {
+  "id": "exp18",
+  "prompt": "Hand-drawn 2D anime style, close-up portrait face of a boy with wide dark eyes and black spiky hair, clean linework, soft daylight, wide 16:9 composition"
+ },
+ {
+  "id": "exp19",
+  "prompt": "Hand-drawn 2D anime style, close-up portrait face of a young woman with sharp red eyes and long purple hair, clean linework, soft daylight, wide 16:9 composition"
+ },
+ {
+  "id": "exp20",
+  "prompt": "Hand-drawn 2D anime style, close-up portrait face of a boy with soft blue eyes and messy blond hair, clean linework, soft daylight, wide 16:9 composition"
+ },
+ {
+  "id": "exp21",
+  "prompt": "Hand-drawn 2D anime style, close-up portrait face of a confident girl with golden eyes and a side ponytail, clean linework, soft daylight, wide 16:9 composition"
+ },
+ {
+  "id": "exp22",
+  "prompt": "Hand-drawn 2D anime style, close-up portrait face of a cheerful man with freckles and curly red hair, clean linework, soft daylight, wide 16:9 composition"
+ },
+ {
+  "id": "exp23",
+  "prompt": "Hand-drawn 2D anime style, close-up portrait face of a calm girl with grey eyes and a long white braid, clean linework, soft daylight, wide 16:9 composition"
+ },
+ {
+  "id": "exp24",
+  "prompt": "Hand-drawn 2D anime style, close-up portrait face of a serene young monk with a shaved head and gentle eyes, clean linework, soft daylight, wide 16:9 composition"
+ },
+ {
+  "id": "sec25",
+  "prompt": "Hand-drawn 2D anime style, a young man with long black hair in a long grey jacket standing on a windy hilltop, clean linework, soft daylight, wide 16:9 composition"
+ },
+ {
+  "id": "sec26",
+  "prompt": "Hand-drawn 2D anime style, a girl with light brown hair in a white summer dress in a grassy field, clean linework, soft daylight, wide 16:9 composition"
+ },
+ {
+  "id": "sec27",
+  "prompt": "Hand-drawn 2D anime style, a schoolgirl with a big red ribbon and a pleated skirt on a school road, clean linework, soft daylight, wide 16:9 composition"
+ },
+ {
+  "id": "sec28",
+  "prompt": "Hand-drawn 2D anime style, a girl with long black hair in a school uniform under blooming cherry blossom trees, clean linework, soft daylight, wide 16:9 composition"
+ },
+ {
+  "id": "sec29",
+  "prompt": "Hand-drawn 2D anime style, a boy with a long red scarf and dark jacket on a snowy street, clean linework, soft daylight, wide 16:9 composition"
+ },
+ {
+  "id": "sec30",
+  "prompt": "Hand-drawn 2D anime style, a girl with long teal hair in a flowing cape on a stone bridge, clean linework, soft daylight, wide 16:9 composition"
+ }
+]
