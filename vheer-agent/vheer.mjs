@@ -57,13 +57,22 @@ export async function makeBaseImage(browser, prompt, dest, log = () => {}) {
   }
 }
 
-export async function makeVideo(browser, imagePath, prompt, dest, { duration = '5s', log = () => {} } = {}) {
+export async function makeVideo(browser, imagePath, prompt, dest, { duration = '5s', model = '', log = () => {} } = {}) {
   const ctx = await newCtx(browser);
   const page = await ctx.newPage();
   try {
     await page.goto('https://vheer.com/app/image-to-video', { waitUntil: 'domcontentloaded', timeout: 60000 });
     await page.locator('textarea').first().waitFor({ timeout: 30000 });
     await page.waitForTimeout(3000);
+    if (model) {
+      await page.getByRole('button', { name: /Vheer Quality|SeeDance|LTX Video|Veo|Sora|Hailuo/ }).first().click();
+      await page.waitForTimeout(800);
+      const opt = page.getByText(model, { exact: false }).first();
+      await opt.scrollIntoViewIfNeeded();
+      await opt.click({ timeout: 10000 });
+      await page.waitForTimeout(1200);
+      log('model ' + model + ' | ' + (await page.getByRole('button', { name: /^Generate/ }).first().innerText()).replace(/\n+/g, ' '));
+    }
     const [fc] = await Promise.all([
       page.waitForEvent('filechooser', { timeout: 20000 }),
       page.getByRole('button', { name: 'Select Images' }).click(),
